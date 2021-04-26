@@ -112,7 +112,7 @@ func Run() error {
 		},
 		{
 			Name:      "delete",
-			Aliases:   []string{"r", "rm"},
+			Aliases:   []string{"d", "del"},
 			UsageText: "projects delete <PROJECT_NAME>",
 			Usage:     "Remove specific project from the current workspace",
 			Before: func(c *cli.Context) error {
