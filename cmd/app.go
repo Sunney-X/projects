@@ -88,10 +88,62 @@ func Run() error {
 			},
 		},
 		{
+			Name:      "remove",
+			Aliases:   []string{"r", "rm"},
+			UsageText: "projects remove <WORKSPACE_NAME>",
+			Usage:     "Remove workspace",
+			Before: func(c *cli.Context) error {
+				if c.Args().First() == "" {
+					return cli.Exit("Workspace name must be provided!", 0)
+				}
+
+				return nil
+			},
+			Action: func(c *cli.Context) (err error) {
+				wn := c.Args().First()
+				if cfg.removeWorkspace(Workspace{Name: wn}) {
+					fmt.Println("✔️")
+				} else {
+					fmt.Println("❌")
+				}
+
+				return
+			},
+		},
+		{
+			Name:      "delete",
+			Aliases:   []string{"r", "rm"},
+			UsageText: "projects delete <PROJECT_NAME>",
+			Usage:     "Remove specific project from the current workspace",
+			Before: func(c *cli.Context) error {
+				if c.Args().First() == "" {
+					return cli.Exit("Project name must be provided!", 0)
+				}
+
+				return nil
+			},
+			Action: func(c *cli.Context) (err error) {
+				pn := c.Args().First()
+				var a string
+				fmt.Printf(`This action will delete the project "%s"
+Do you want to proceed? (Y/n)
+> `, pn)
+				if _, err := fmt.Scan(&a); err == nil && strings.EqualFold(a, "y") {
+					if cfg.deleteProject(pn) {
+						fmt.Println("✔️")
+					} else {
+						fmt.Println("❌")
+					}
+				}
+
+				return
+			},
+		},
+		{
 			Name:      "list",
 			Aliases:   []string{"l"},
 			UsageText: "projects list",
-			Usage:     "List existing projects",
+			Usage:     "List existing projects for the current workspace",
 			Action: func(c *cli.Context) (err error) {
 				var w *Workspace
 				wn := c.Args().First()
@@ -159,22 +211,6 @@ func Run() error {
 				return
 			},
 		},
-		// {
-		// 	Name:      "remove",
-		// 	Aliases:   []string{"r", "rm"},
-		// 	UsageText: "projects remove <WORKSPACE_NAME>",
-		// 	Usage:     "Remove directory from the workspaces",
-		// 	Before: func(c *cli.Context) error {
-		// 		if c.Args().First() == "" {
-		// 			return cli.Exit("Workspace name must be provided!", 0)
-		// 		}
-
-		// 		return nil
-		// 	},
-		// 	Action: func(c *cli.Context) (err error) {
-		// 		return
-		// 	},
-		// },
 		{
 			Name:      "workspaces",
 			Aliases:   []string{"w"},

@@ -79,6 +79,28 @@ func (c *Config) addWorkspace(workspace Workspace) error {
 	return nil
 }
 
+func (c *Config) removeWorkspace(workspace Workspace) bool {
+	var found bool
+	newWorkspaces := make([]Workspace, 0)
+
+	for _, w := range c.Workspaces {
+		if w.Name != workspace.Name {
+			newWorkspaces = append(newWorkspaces, w)
+		} else {
+			found = true
+		}
+	}
+
+	c.Workspaces = newWorkspaces
+
+	c.update()
+	return found
+}
+
+func (c *Config) deleteProject(project string) bool {
+	return os.RemoveAll(c.current.Directory+"/"+project) == nil
+}
+
 func (c *Config) update() {
 	b, _ := json.Marshal(c)
 	ioutil.WriteFile(ConfigFilename, b, 0644)
