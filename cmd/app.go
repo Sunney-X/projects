@@ -15,8 +15,9 @@ func Run() error {
 	cfg := config()
 
 	app := &cli.App{
-		Name:  "projects",
-		Usage: "A project manager app",
+		Name:    "projects",
+		Version: "0.1",
+		Usage:   "A project manager app",
 		UsageText: `projects <PROJECT_NAME>   Start a project instantly
    projects command [arguments...]`,
 		Action: func(c *cli.Context) (err error) {
@@ -54,7 +55,7 @@ func Run() error {
 					return cli.Exit(fmt.Sprintf(`Project "%s" already exists`, pn), 0)
 				}
 
-				exec.Command("code", pn).Run()
+				exec.Command("code", cfg.current.Directory+"/"+pn).Run()
 
 				return
 			},
